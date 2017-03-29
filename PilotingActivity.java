@@ -56,11 +56,16 @@ public class PilotingActivity extends Activity implements ARDeviceControllerList
     private Button forwardBt;
     private Button backBt;
 
+    private Button speedBt;
+
     private TextView batteryLabel;
+    private TextView speedLabel;
 
     private AlertDialog alertDialog;
 
     private ImageView imgView;
+
+    private int sumoSpeed=5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +103,27 @@ public class PilotingActivity extends Activity implements ARDeviceControllerList
     }
 
     private void initIHM() {
+        speedLabel = (TextView) findViewById(R.id.speedLabel);
+        speedLabel.setText(Integer.toString(sumoSpeed));
+
+        speedBt=(Button) findViewById(R.id.speedBt);
+        speedBt.setOnClickListener(new View.OnClickListener(){
+            /**
+             * Called when a view has been clicked.
+             *
+             * @param v The view that was clicked.
+             */
+            @Override
+            public void onClick(View v) {
+                if(sumoSpeed<10){
+                    sumoSpeed++;
+                }else{
+                    sumoSpeed=1;
+                }
+                speedLabel.setText(Integer.toString(sumoSpeed));
+            }
+        });
+
         jumHightBt = (Button) findViewById(R.id.jumHightBt);
         jumHightBt.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -157,7 +183,7 @@ public class PilotingActivity extends Activity implements ARDeviceControllerList
                     case MotionEvent.ACTION_DOWN:
                         v.setPressed(true);
                         if (deviceController != null) {
-                            deviceController.getFeatureJumpingSumo().setPilotingPCMDTurn((byte) 10);
+                            deviceController.getFeatureJumpingSumo().setPilotingPCMDTurn((byte)(sumoSpeed*10) );
                             deviceController.getFeatureJumpingSumo().setPilotingPCMDFlag((byte) 1);
 
                         }
@@ -187,7 +213,7 @@ public class PilotingActivity extends Activity implements ARDeviceControllerList
                     case MotionEvent.ACTION_DOWN:
                         v.setPressed(true);
                         if (deviceController != null) {
-                            deviceController.getFeatureJumpingSumo().setPilotingPCMDTurn((byte) -10);
+                            deviceController.getFeatureJumpingSumo().setPilotingPCMDTurn((byte)(sumoSpeed*10));
                             deviceController.getFeatureJumpingSumo().setPilotingPCMDFlag((byte) 1);
                         }
                         break;
@@ -216,7 +242,7 @@ public class PilotingActivity extends Activity implements ARDeviceControllerList
                     case MotionEvent.ACTION_DOWN:
                         v.setPressed(true);
                         if (deviceController != null) {
-                            deviceController.getFeatureJumpingSumo().setPilotingPCMDSpeed((byte) 50);
+                            deviceController.getFeatureJumpingSumo().setPilotingPCMDSpeed((byte)(sumoSpeed*10));
                             deviceController.getFeatureJumpingSumo().setPilotingPCMDFlag((byte) 1);
                         }
                         break;
@@ -245,7 +271,7 @@ public class PilotingActivity extends Activity implements ARDeviceControllerList
                     case MotionEvent.ACTION_DOWN:
                         v.setPressed(true);
                         if (deviceController != null) {
-                            deviceController.getFeatureJumpingSumo().setPilotingPCMDSpeed((byte) -50);
+                            deviceController.getFeatureJumpingSumo().setPilotingPCMDSpeed((byte)(sumoSpeed*(-10)));
                             deviceController.getFeatureJumpingSumo().setPilotingPCMDFlag((byte) 1);
                         }
                         break;
